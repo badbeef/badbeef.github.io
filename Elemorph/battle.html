@@ -1,0 +1,120 @@
+<html>
+<head>
+<style>
+#content {
+  width: 100%;
+  height: 100%;
+}
+
+#content .upperLeft {
+  border: 2px;
+  width: 60%;
+  height: 40%;
+  float: left;
+}
+#content .upperRight {
+  border: 2px;
+  width: 40%;
+  height: 40%;
+  float: left;
+  text-align: center;
+}
+#content .lowerLeft {
+  border: 2px;
+  width: 60%;
+  height: 60%;
+  float: left;
+  text-align: center;
+}
+#content .LowerRight {
+  border: 2px;
+  width: 40%;
+  height: 60%;
+  float: left;
+}
+
+</style>
+<script>
+"use strict";
+
+function Elemorph(type, level) {
+  var type;
+  var level;
+  var name;
+  var health = 0;
+  
+  this.toString = function() {
+    return this.name + "-Morph, level " + this.level;
+  }
+
+  this.type = type;
+  this.level = level;
+
+
+  switch (type) {
+  case "water":
+    if (level < 10) {
+      this.name = "Puddle";
+      this.health = 20;
+    }
+    break;
+  case "fire":
+    if (level < 10) {
+      this.name = "Ember";
+      this.health = 30;
+    }
+    break;
+  default:
+    this.name = "Unknown";
+  }
+}
+
+FireMorph.prototype = new Elemorph;
+
+function FireMorph() {
+}
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : 
+	decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function updateStatus(elemorph, page) {
+  page.innerHTML = "Name:" + elemorph.name + "<br>";
+  page.innerHTML += "Level:" + elemorph.level + "<br>";
+}
+
+function main() {
+  var me = new Elemorph(getParameterByName("me"), 5);
+  var other = new Elemorph(getParameterByName("other"), 5);
+  document.getElementById("LL").innerHTML = me.toString() + "<br>" +
+	"<img src=Img/" + me.name + "-Morph-back.jpg>";
+  document.getElementById("UR").innerHTML = other.toString() + "<br>" +
+	"<img src=Img/" + other.name + "-Morph.jpg width=300 height=300>";
+  updateStatus(me, document.getElementById("UL"));
+  updateStatus(other, document.getElementById("LR"));
+}
+window.onload = main;
+</script>
+</head>
+<title>Battle</title>
+<body>
+<div id="content">
+<div class="upperLeft" id="none">
+<p id="UL"></p>
+</div>
+<div class="upperRight" id="none">
+<p id="UR"></p>
+</div>
+<div class="lowerLeft" id="none">
+<p id="LL"></p>
+</div>
+<div class="lowerRight" id="none">
+<p id="LR"></p>
+</div>
+</div>
+</body>
+</html>

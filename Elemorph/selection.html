@@ -1,0 +1,137 @@
+<html>
+<head>
+<style>
+#questions {
+  float:left;
+}
+#picture {
+  text-align:center;
+}
+p.sansserif {
+    font-family: "Courier New", Courier, monospace;
+}
+
+</style>
+<script>
+"use strict";
+
+var FireMorph  = [[0,1,0],[0,1,0],[1,0,0],[1,0,1],[1,0,0]];
+var WaterMorph = [[0,0,1],[0,0,1],[0,1,0],[1,0,0],[0,1,0]];
+var GrassMorph = [[1,0,0],[0,1,0],[0,0,1],[0,1,0],[1,0,0]];
+var AirMorph = [[0,0,1],[0,0,1],[0,1,0],[0,0,1],[0,0,1]];
+var GroundMorph = [[1,0,0],[1,0,0],[0,0,1],[0,1,0],[0,0,1]];
+var RockMorph = [[0,1,0],[1,0,0],[1,0,0],[1,0,0],[0,1,0]];
+var scores = {
+  fire: 0,
+  water: 0,
+  grass: 0,
+  air: 0,
+  ground: 0,
+  rock: 0
+};
+
+function pickElemorph() {
+  scores.fire = 0;
+  scores.water = 0;
+  scores.grass = 0;
+  scores.air = 0;
+  scores.ground = 0;
+  scores.rock = 0;
+  for (var j = 0; j < 5; j++) {
+  var radios = document.getElementsByName("A" + (j + 1));
+  for (var i = 0, count = radios.length; i < count; i++) {
+    if (radios[i].checked) {
+      scores.fire += FireMorph[j][i];
+      scores.water += WaterMorph[j][i];
+      scores.grass += GrassMorph [j][i];
+      scores.air += AirMorph [j][i];     
+      scores.ground += GroundMorph [j][i];	 
+      scores.rock += RockMorph [j][i];
+    }
+  }
+  }
+
+  var highest = 0;
+  var elemorph = "nothing";
+  var picture = "";
+  if (scores.fire > highest) highest = scores.fire;
+  if (scores.water > highest) highest = scores.water;
+  if (scores.grass > highest) highest = scores.grass;
+  if (scores.air > highest) highest = scores.air;
+  if (scores.ground > highest) highest = scores.ground;
+  if (scores.rock > highest) highest = scores.rock;
+
+  if (scores.fire == highest) {
+    elemorph = "n Ember-Morph (level 5)";
+    picture = "<img src=Img/Ember-Morph.jpg>";
+  } else if (scores.water == highest) {
+    elemorph = " Puddle-Morph (level 5)";
+    picture = "<img src=Img/Puddle-Morph.jpg>";
+  } else if (scores.grass == highest) {
+    elemorph = " Grass-Morph (level 5)";
+  } else if (scores.air == highest) {
+    elemorph = " Breeze-Morph (level 5)";
+  } else if (scores.ground == highest) {
+    elemorph = " Dirt-Morph (level 5)";
+  } else if (scores.rock == highest) {
+    elemorph = " Pebble-Morph (level 5)";
+  }
+
+  document.getElementById("mypick").innerHTML = "<center>" + picture + "<br>" + "You got a" + elemorph + "!</center>";
+  
+}
+</script>
+</head>
+<body>
+<div id = "questions">
+<p>These following questions will decide what elemorph you will get.</p>
+<form>
+Question 1: Where would you rather go?
+<br>
+  <input type="radio" name="A1" value="0" checked>a jungle
+<br>
+  <input type="radio" name="A1" value="1">a volcano
+<br>
+  <input type="radio" name="A1" value="2">the ocean  
+<p>
+Question 2: What is your most favorite animal? 
+<br>
+  <input type="radio" name="A2" value="0" checked>a mouse
+<br>
+  <input type="radio" name="A2" value="1">a cat
+<br>
+  <input type="radio" name="A2" value="2">a dog
+<p>
+Question 3: What color do you like the most?
+<br> 
+  <input type="radio" name="A3" value="0" checked>red
+<br> 
+  <input type="radio" name="A3" value="1">blue
+<br>    
+  <input type="radio" name="A3" value="2">green
+<p>
+Question 4: If you were stranded, what would you do first?
+<br> 
+  <input type="radio" name="A4" value="0" checked>go find water
+<br>
+  <input type="radio" name="A4" value="1">look at your surroundings
+<br>
+  <input type="radio" name="A4" value="2">start a fire
+<p>
+Question 5: What approach would you take for battling somebody?
+<br>
+  <input type="radio" name="A5" value="0" checked>slow life-taking
+<br>
+  <input type="radio" name="A5" value="1">powered attacks
+<br>
+  <input type="radio" name="A5" value="2">hard to defeat by or immune to some kinds
+<p>
+</form>
+<button onclick="pickElemorph()">Pick my Elemorph</button>
+</div>
+
+<div id = "picture">
+<p id="mypick" class="sansserif"></p>
+</div>
+</body>
+</html>
