@@ -11,6 +11,7 @@
   width: 60%;
   height: 40%;
   float: left;
+  text-align: center;
 }
 #content .upperRight {
   border: 2px;
@@ -31,8 +32,12 @@
   width: 40%;
   height: 60%;
   float: left;
+  text-align: center;
 }
 
+p.sansserif {
+    font-family: "Lucida Console", Courier, monospace;
+}
 </style>
 <script>
 "use strict";
@@ -41,7 +46,9 @@ function Elemorph(type, level) {
   var type;
   var level;
   var name;
+  var exp;
   var health = 0;
+  var maxhealth = 0;
   
   this.toString = function() {
     return this.name + "-Morph, level " + this.level;
@@ -52,26 +59,41 @@ function Elemorph(type, level) {
 
 
   switch (type) {
-  case "water":
-    if (level < 10) {
+  case "water":  
+    if (level < 16) {
       this.name = "Puddle";
-      this.health = 20;
+      this.experience = 30;
+    } else if (level < 32) {
+      this.name = "Raincloud";
+      this.experience = 50;
+    } else if (level < 50) {
+      this.name = "Hurricane";
+      this.experience = 100; 
+    } else if (level < 101) {
+      this.name = "Mega Hurricane";
+      this.experience = 200; 
+    } else if (level > 100) {
     }
+    this.maxhealth = level * 10;
+    this.health = this.maxhealth;
     break;
   case "fire":
-    if (level < 10) {
+    if (level < 16) {
       this.name = "Ember";
-      this.health = 30;
+      this.experience = 30;
+    } else if (level < 32) {
+      this.name = "Flame";
+      this.experience = 400;
+    } else if (level < 50) {
+      this.name = "Fire";
+      this.experience = 1000;      
     }
+    this.maxhealth = level * 10;
+    this.health = this.maxhealth;
     break;
   default:
     this.name = "Unknown";
   }
-}
-
-FireMorph.prototype = new Elemorph;
-
-function FireMorph() {
 }
 
 function getParameterByName(name) {
@@ -83,19 +105,21 @@ function getParameterByName(name) {
 }
 
 function updateStatus(elemorph, page) {
-  page.innerHTML = "Name:" + elemorph.name + "<br>";
-  page.innerHTML += "Level:" + elemorph.level + "<br>";
+  page.innerHTML = elemorph.name + "-Morph";
+  page.innerHTML += " lvl." + elemorph.level + "<br>";
+  page.innerHTML += "Health:" + elemorph.health + "/" + elemorph.maxhealth + "<br>"
+  page.innerHTML += "Exp." + elemorph.experience + "<br>"
 }
 
 function main() {
   var me = new Elemorph(getParameterByName("me"), 5);
   var other = new Elemorph(getParameterByName("other"), 5);
-  document.getElementById("LL").innerHTML = me.toString() + "<br>" +
-	"<img src=Img/" + me.name + "-Morph-back.jpg>";
-  document.getElementById("UR").innerHTML = other.toString() + "<br>" +
-	"<img src=Img/" + other.name + "-Morph.jpg width=300 height=300>";
-  updateStatus(me, document.getElementById("UL"));
-  updateStatus(other, document.getElementById("LR"));
+  document.getElementById("LL").innerHTML = 
+       "<img src=Img/" + me.name + "-Morph-back.jpg>";
+  document.getElementById("UR").innerHTML = 
+	     "<img src=Img/" + other.name + "-Morph.jpg width=300 height=300>";
+  updateStatus(me, document.getElementById("LR"));
+  updateStatus(other, document.getElementById("UL"));
 }
 window.onload = main;
 </script>
@@ -104,7 +128,7 @@ window.onload = main;
 <body>
 <div id="content">
 <div class="upperLeft" id="none">
-<p id="UL"></p>
+<p id="UL" class="sansserif"></p>
 </div>
 <div class="upperRight" id="none">
 <p id="UR"></p>
@@ -113,7 +137,7 @@ window.onload = main;
 <p id="LL"></p>
 </div>
 <div class="lowerRight" id="none">
-<p id="LR"></p>
+<p id="LR" class="sansserif"></p>
 </div>
 </div>
 </body>
