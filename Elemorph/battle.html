@@ -35,6 +35,10 @@
   text-align: center;
 }
 
+#button {
+  width : 7em; height : 2.2em;
+}
+
 p.sansserif {
     font-family: "Lucida Console", Courier, monospace;
 }
@@ -60,7 +64,8 @@ function Elemorph(type, level) {
 
   switch (type) {
   case "water":  
-    if (level < 16) {
+    if (level < 1) {
+    } else if (level < 16) {
       this.name = "Puddle";
       this.experience = 30;
     } else if (level < 32) {
@@ -68,17 +73,18 @@ function Elemorph(type, level) {
       this.experience = 50;
     } else if (level < 50) {
       this.name = "Hurricane";
-      this.experience = 100; 
+      this.experience = 100;
     } else if (level < 101) {
       this.name = "Mega Hurricane";
-      this.experience = 200; 
+      this.experience = 200;
     } else if (level > 100) {
     }
     this.maxhealth = level * 10;
     this.health = this.maxhealth;
     break;
   case "fire":
-    if (level < 16) {
+    if (level < 1) {
+    } else if (level < 16) {
       this.name = "Ember";
       this.experience = 30;
     } else if (level < 32) {
@@ -87,6 +93,10 @@ function Elemorph(type, level) {
     } else if (level < 50) {
       this.name = "Fire";
       this.experience = 1000;      
+    } else if (level < 101) {
+      this.name = "Mega Fire";
+      this.experience = 10000;      
+    } else if (level > 100) {      
     }
     this.maxhealth = level * 10;
     this.health = this.maxhealth;
@@ -121,6 +131,24 @@ function main() {
   updateStatus(me, document.getElementById("LR"));
   updateStatus(other, document.getElementById("UL"));
 }
+
+function makeMoves() {
+  var menu = document.getElementById("menu1");
+  menu.innerHTML = "What Moves?"
+  menu.innerHTML += "<br>" 
+  menu.innerHTML += ""
+}
+
+function switchElemorph() {
+  var menu = document.getElementById("menu1");
+  menu.innerHTML = "Switch What?"
+}
+
+function bananas() {
+  var menu = document.getElementById("menu1");
+  menu.innerHTML = "Food"
+}
+
 window.onload = main;
 </script>
 </head>
@@ -138,6 +166,12 @@ window.onload = main;
 </div>
 <div class="lowerRight" id="none">
 <p id="LR" class="sansserif"></p>
+<p id="menu1"></p>
+<p style="position:fixed; bottom: 100">  
+<button id = button onclick = "makeMoves()"> Moves </button>
+<button id = button onclick = "switchElemorph()"> Switch </button> 
+<button id = button onclick = "bananas()"> Items </button> 
+</p>
 </div>
 </div>
 </body>
