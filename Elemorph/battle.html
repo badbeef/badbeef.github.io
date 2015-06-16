@@ -106,11 +106,29 @@ function Elemorph(type, level) {
   }
 }
 
+function setCookie(cname, cvalue) {
+  var d = new Date();
+  d.setTime(d.getTime() + 99999999999);   // ~3 years
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
+} 
+
+function getCookie(cname) {
+  var name = cname + "=";
+  var ca = document.cookie.split(';');
+  for(var i=0; i<ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1);
+      if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+  }
+  return "";
+} 
+
 function getParameterByName(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : 
+  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  return results === null ? "" : 
 	decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
@@ -122,8 +140,9 @@ function updateStatus(elemorph, page) {
 }
 
 function main() {
-  var me = new Elemorph(getParameterByName("me"), 5);
-  var other = new Elemorph(getParameterByName("other"), 5);
+  var me = new Elemorph(getCookie("MyElemorph-type"), 
+                        getCookie("MyElemorph-level"));
+  var other = new Elemorph("water", 5);
   document.getElementById("LL").innerHTML = 
        "<img src=Img/" + me.name + "-Morph-back.jpg>";
   document.getElementById("UR").innerHTML = 

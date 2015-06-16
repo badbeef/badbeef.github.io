@@ -51,9 +51,17 @@ function pickElemorph() {
   }
   }
 
+function setCookie(cname, cvalue) {
+  var d = new Date();
+  d.setTime(d.getTime() + 99999999999);   // ~3 years
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + "; " + expires + "; path=/";
+} 
+
   var highest = 0;
   var elemorph = "nothing";
   var picture = "";
+  var type ="";
   if (scores.fire > highest) highest = scores.fire;
   if (scores.water > highest) highest = scores.water;
   if (scores.grass > highest) highest = scores.grass;
@@ -64,21 +72,29 @@ function pickElemorph() {
   if (scores.fire == highest) {
     elemorph = "n Ember-Morph (level 5)";
     picture = "<img src=Img/Ember-Morph.jpg>";
+    type = "fire";
   } else if (scores.water == highest) {
     elemorph = " Puddle-Morph (level 5)";
     picture = "<img src=Img/Puddle-Morph.jpg>";
+    type = "water";
   } else if (scores.grass == highest) {
     elemorph = " Grass-Morph (level 5)";
+    type = "grass";
   } else if (scores.air == highest) {
     elemorph = " Breeze-Morph (level 5)";
+    type = "air";
   } else if (scores.ground == highest) {
     elemorph = " Dirt-Morph (level 5)";
+    type = "ground";
   } else if (scores.rock == highest) {
     elemorph = " Pebble-Morph (level 5)";
+    type = "rock";
   }
 
   document.getElementById("mypick").innerHTML = "<center>" + picture + "<br>" + "You got a" + elemorph + "!</center>";
-  
+
+  setCookie("MyElemorph-type", type);
+  setCookie("MyElemorph-level", 5);  
 }
 </script>
 </head>
