@@ -132,30 +132,34 @@ function getParameterByName(name) {
 	decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function updateStatus(elemorph, page) {
-  page.innerHTML = elemorph.name + "-Morph";
-  page.innerHTML += " lvl." + elemorph.level + "<br>";
-  page.innerHTML += "Health:" + elemorph.health + "/" + elemorph.maxhealth + "<br>"
-  page.innerHTML += "Exp." + elemorph.experience + "<br>"
+function updateStatus(elemorph) {
+  elemorph.page.innerHTML = elemorph.name + "-Morph";
+  elemorph.page.innerHTML += " lvl." + elemorph.level + "<br>";
+  elemorph.page.innerHTML += "Health:" + elemorph.health + "/" + elemorph.maxhealth + "<br>"
+  elemorph.page.innerHTML += "Exp." + elemorph.experience + "<br>"
 }
 
+var me;
+var other;
+
 function main() {
-  var me = new Elemorph(getCookie("MyElemorph-type"), 
+  me = new Elemorph(getCookie("MyElemorph-type"), 
                         getCookie("MyElemorph-level"));
-  var other = new Elemorph("water", 5);
+  other = new Elemorph("water", 5);
   document.getElementById("LL").innerHTML = 
        "<img src=Img/" + me.name + "-Morph-back.jpg>";
   document.getElementById("UR").innerHTML = 
 	     "<img src=Img/" + other.name + "-Morph.jpg width=300 height=300>";
-  updateStatus(me, document.getElementById("LR"));
-  updateStatus(other, document.getElementById("UL"));
+  me.page = document.getElementById("LR");
+  other.page = document.getElementById("UL");
+  updateStatus(me);
+  updateStatus(other);
 }
 
 function makeMoves() {
   var menu = document.getElementById("menu1");
-  menu.innerHTML = "What Moves?";
-  menu.innerHTML += "<br><button id = button onclick ='flametack()'> Flame </button> "; 
-  menu.innerHTML += "";
+  //menu.innerHTML = "Which move should"
+  menu.innerHTML = "<br><button id = button onclick ='flametack(other)'> Flame </button> "; 
 }
 
 function switchElemorph() {
@@ -168,10 +172,28 @@ function bananas() {
   menu.innerHTML = "Food"
 }
 
-function flametack() {
-  var menu = document.getElementById("menu1");
-  menu.innerHTML = "Food"
+function flametack(enemy) {
+  var menu = document.getElementById("menu2");
+  var damage = 10; // standard damage
+  switch (enemy.type) {
+    case "water":
+      damage /= 2
+      break;
+    default:
+  }
+  enemy.health -= damage;
+  menu.innerHTML = "Ember-Morph dealt " + damage + " damage!"
+
+  if (enemy.health < 1) {
+    menu.innerHTML = enemy.name + "-Morph got knocked out!"
+  }
+
+  // refresh the screen
+  updateStatus(enemy);
 }
+
+ 
+
 
 window.onload = main;
 </script>
@@ -181,6 +203,7 @@ window.onload = main;
 <div id="content">
 <div class="upperLeft" id="none">
 <p id="UL" class="sansserif"></p>
+<p id="menu2"></p>
 </div>
 <div class="upperRight" id="none">
 <p id="UR"></p>
@@ -191,7 +214,7 @@ window.onload = main;
 <div class="lowerRight" id="none">
 <p id="LR" class="sansserif"></p>
 <p id="menu1"></p>
-<p style="position:fixed; bottom: 100">  
+<p style="position:fixed; bottom: 50">  
 <button id = button onclick = "makeMoves()"> Moves </button>
 <button id = button onclick = "switchElemorph()"> Switch </button> 
 <button id = button onclick = "bananas()"> Items </button> 
