@@ -53,6 +53,37 @@ function Elemorph(type, level) {
   var exp;
   var health = 0;
   var maxhealth = 0;
+  var burnt = false;
+
+  this.updateStatus = function() {
+    this.page.innerHTML = this.name + "-Morph";
+    this.page.innerHTML += " lvl." + this.level + "<br>";
+    if (this.burnt == true) {
+      this.page.innerHTML += "Burned</B><br>";
+      if (this.health < 51) {
+        this.health -= 3;
+      } else if (this.health < 101) {
+        this.health -= 7;
+      } else if (this.health < 201) {
+        this.health -= 15;
+      } else if (this.health < 501) {
+        this.health -= 27;
+      } else if (this.health < 701) {
+        this.health -= 35;
+      } else if (this.health < 1001) {
+        this.health -= 45;
+      }
+    }
+
+    this.page.innerHTML += "Health:" + this.health + "/" + this.maxhealth + "<br>"
+    this.page.innerHTML += "Exp." + this.experience + "<br>"
+    if (this.health < 1) {
+    this.page.innerHTML += this.name + "-Morph got knocked out!"
+  }
+  }
+
+  this.attack = function(enemy) {
+  }
   
   this.toString = function() {
     return this.name + "-Morph, level " + this.level;
@@ -132,12 +163,7 @@ function getParameterByName(name) {
 	decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-function updateStatus(elemorph) {
-  elemorph.page.innerHTML = elemorph.name + "-Morph";
-  elemorph.page.innerHTML += " lvl." + elemorph.level + "<br>";
-  elemorph.page.innerHTML += "Health:" + elemorph.health + "/" + elemorph.maxhealth + "<br>"
-  elemorph.page.innerHTML += "Exp." + elemorph.experience + "<br>"
-}
+
 
 var me;
 var other;
@@ -151,15 +177,23 @@ function main() {
   document.getElementById("UR").innerHTML = 
 	     "<img src=Img/" + other.name + "-Morph.jpg width=300 height=300>";
   me.page = document.getElementById("LR");
+  me.page2 = document.getElementById("menu1");
   other.page = document.getElementById("UL");
-  updateStatus(me);
-  updateStatus(other);
+  other.page2 = document.getElementById("menu2");
+  me.updateStatus();
+  other.updateStatus();
 }
 
 function makeMoves() {
   var menu = document.getElementById("menu1");
-  //menu.innerHTML = "Which move should"
-  menu.innerHTML = "<br><button id = button onclick ='flametack(other)'> Flame </button> "; 
+  menu.innerHTML = "Which move should " + me.name + "-Morph use?"
+
+  if(me.level  < 5){
+  menu.innerHTML += "<br><button id = button onclick ='flametack(other)'> Flame </button> ";
+  } else if(me.level  < 8){
+  menu.innerHTML += "<br><br><button id = button onclick ='flametack(other)'> Flame </button> "; 
+  menu.innerHTML += "<br><button id = button onclick ='burnt(other)'> Burn </button> ";
+  } 
 }
 
 function switchElemorph() {
@@ -182,16 +216,43 @@ function flametack(enemy) {
     default:
   }
   enemy.health -= damage;
-  menu.innerHTML = "Ember-Morph dealt " + damage + " damage!"
+  menu.innerHTML = me.name + "-Morph dealt " + damage + " damage!"
 
-  if (enemy.health < 1) {
-    menu.innerHTML = enemy.name + "-Morph got knocked out!"
+  // refresh the screen
+  enemy.updateStatus();
+
+  if (enemy == other) {
+    other.attack(me);
+  }
+}
+
+function burnt(enemy) {
+  var menu = document.getElementById("menu2");
+  var damage = 0; // standard damage
+  if (Math.random() < 0.95) {
+     enemy.burnt = true;
+  }
+  switch (enemy.type) {
+    case "water":
+      damage /= 2 
+      break;
+    default:
+  }
+  enemy.health -= damage;
+
+  menu.innerHTML = me.name + "-Morph dealt " + damage + " damage";
+  if (enemy.burnt == true) {
+    menu.innerHTML += ", but " + enemy.name + "-Morph got burned!"  
+  } else {
+    menu.innerHTML += "."
   }
 
   // refresh the screen
-  updateStatus(enemy);
+  enemy.updateStatus();
+  if (enemy == other) {
+    other.attack(me);
+  }
 }
-
  
 
 
