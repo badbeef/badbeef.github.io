@@ -74,15 +74,23 @@ function Elemorph(type, level) {
         this.health -= 45;
       }
     }
+    
+    if (this.health < 1) {
+    this.health = 0;  
+  }  
 
     this.page.innerHTML += "Health:" + this.health + "/" + this.maxhealth + "<br>"
     this.page.innerHTML += "Exp." + this.experience + "<br>"
     if (this.health < 1) {
-    this.page.innerHTML += this.name + "-Morph got knocked out!"
+    this.page2.innerHTML += "<br>The foe " + this.name + "-Morph got knocked out!"
+    //this.health = 0;
   }
   }
 
   this.attack = function(enemy) {
+    if (enemy.name = Puddle) {
+      me.health -= 100 
+    }
   }
   
   this.toString = function() {
@@ -132,6 +140,14 @@ function Elemorph(type, level) {
     this.maxhealth = level * 10;
     this.health = this.maxhealth;
     break;
+  case "grass":
+    if (level < 16) {
+      this.name = "Grass";
+      this.experience = 30;
+    }
+    this.maxhealth = level * 10;
+    this.health = this.maxhealth;
+    break;
   default:
     this.name = "Unknown";
   }
@@ -171,7 +187,10 @@ var other;
 function main() {
   me = new Elemorph(getCookie("MyElemorph-type"), 
                         getCookie("MyElemorph-level"));
-  other = new Elemorph("water", 5);
+  var random = Math.random();
+  if (random < 0.4) other = new Elemorph("water", 5);
+  else if (random < 0.7) other = new Elemorph("grass", 5);
+  else other = new Elemorph("fire", 5);
   document.getElementById("LL").innerHTML = 
        "<img src=Img/" + me.name + "-Morph-back.jpg>";
   document.getElementById("UR").innerHTML = 
@@ -198,7 +217,7 @@ function makeMoves() {
 
 function switchElemorph() {
   var menu = document.getElementById("menu1");
-  menu.innerHTML = "Switch What?"
+  menu.innerHTML = "Switch with what elemorph?"
 }
 
 function bananas() {
@@ -216,7 +235,7 @@ function flametack(enemy) {
     default:
   }
   enemy.health -= damage;
-  menu.innerHTML = me.name + "-Morph dealt " + damage + " damage!"
+  menu.innerHTML = me.name + "-Morph dealt " + damage + " damage!<br>"
 
   // refresh the screen
   enemy.updateStatus();
@@ -242,7 +261,7 @@ function burnt(enemy) {
 
   menu.innerHTML = me.name + "-Morph dealt " + damage + " damage";
   if (enemy.burnt == true) {
-    menu.innerHTML += ", but " + enemy.name + "-Morph got burned!"  
+    menu.innerHTML += ", but the foe " + enemy.name + "-Morph got burned!<br>"  
   } else {
     menu.innerHTML += "."
   }
