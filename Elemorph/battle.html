@@ -188,8 +188,8 @@ function main() {
   me = new Elemorph(getCookie("MyElemorph-type"), 
                         getCookie("MyElemorph-level"));
   var random = Math.random();
-  if (random < 0.4) other = new Elemorph("water", 5);
-  else if (random < 0.7) other = new Elemorph("grass", 5);
+  if (random < 1/3) other = new Elemorph("water", 5);
+  else if (random < 2/3) other = new Elemorph("grass", 5);
   else other = new Elemorph("fire", 5);
   document.getElementById("LL").innerHTML = 
        "<img src=Img/" + me.name + "-Morph-back.jpg>";
@@ -234,6 +234,12 @@ function flametack(enemy) {
       break;
     default:
   }
+  switch (enemy.type) {
+    case "grass":
+      damage *= 2
+      break;
+    default:
+  }
   enemy.health -= damage;
   menu.innerHTML = me.name + "-Morph dealt " + damage + " damage!<br>"
 
@@ -251,6 +257,11 @@ function burnt(enemy) {
   if (Math.random() < 0.95) {
      enemy.burnt = true;
   }
+  if (enemy.type == "fire") {
+     enemy.burnt = false;
+     menu.innerHTML = me.name + "-Morph dealt " + damage + " damage. " + me.name + "-Morph tried to burn the foe " + enemy.name + "-Morph, but could not." ;
+  }
+
   switch (enemy.type) {
     case "water":
       damage /= 2 
