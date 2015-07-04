@@ -76,21 +76,74 @@ function Elemorph(type, level) {
     }
     
     if (this.health < 1) {
-    this.health = 0;  
-  }  
+      this.health = 0;
+      if (this == me) {
+        this.page2.innerHTML = "Your ";
+      } else {
+        this.page2.innerHTML = "The foe ";
+      }
+      this.page2.innerHTML += this.name + "-Morph got knocked out!";
+    }
 
     this.page.innerHTML += "Health:" + this.health + "/" + this.maxhealth + "<br>"
-    this.page.innerHTML += "Exp." + this.experience + "<br>"
-    if (this.health < 1) {
-    this.page2.innerHTML += "<br>The foe " + this.name + "-Morph got knocked out!"
-    //this.health = 0;
-  }
+    this.page.innerHTML += "Exp." + this.experience + "<br>";
   }
 
+
+this.flametack = function(enemy) {
+  var menu = document.getElementById("menu2");
+  var damage = 15; // standard damage
+  switch (enemy.type) {
+    case "water":
+      damage = 7;
+      break;
+    default:
+  }
+  switch (enemy.type) {
+    case "grass":
+      damage *= 2;
+      break;
+    default:
+  }
+  enemy.health -= damage;
+  enemy.page2.innerHTML = this.name + "-Morph dealt " + damage + " damage!<br>"
+
+  // refresh the screen
+  enemy.updateStatus();
+
+  if (enemy == other) {
+    other.attack(me);
+  }
+}
+
+
   this.attack = function(enemy) {
-    if (enemy.name = Puddle) {
-      me.health -= 100 
+    switch (this.type) {
+    case "fire":
+      switch (this.name) {
+      case "Ember":
+        this.flametack(enemy);
+        break;
+      }
+      break;
+    case "water":
+      switch (this.name) {
+      case "Puddle":
+        this.flametack(enemy);
+        break;
+      }
+      break;
+    case "grass":
+      switch (this.name) {
+      case "Sprout":
+        this.flametack(enemy);
+        break;
+      }
+      break;
+    default:
     }
+
+    enemy.updateStatus();
   }
   
   this.toString = function() {
@@ -131,20 +184,32 @@ function Elemorph(type, level) {
       this.experience = 400;
     } else if (level < 50) {
       this.name = "Fire";
-      this.experience = 1000;      
+      this.experience = 1000;
     } else if (level < 101) {
       this.name = "Mega Fire";
       this.experience = 10000;      
-    } else if (level > 100) {      
+    } else if (level > 100) {
     }
     this.maxhealth = level * 10;
     this.health = this.maxhealth;
     break;
   case "grass":
-    if (level < 16) {
-      this.name = "Grass";
+    if (level < 1) {
+
+    } else if (level < 16) {
+      this.name = "Sprout";
       this.experience = 30;
-    }
+    } else if (level < 32) {
+      this.name = "Grass";
+      this.experience = 400;
+    } else if (level < 50) {
+      this.name = "Tree";
+      this.experience = 1000;
+    } else if (level < 101) {
+      this.name = "Mega Tree";
+      this.experience = 10000;
+    } else if (level > 100) {
+    } 
     this.maxhealth = level * 10;
     this.health = this.maxhealth;
     break;
@@ -208,9 +273,9 @@ function makeMoves() {
   menu.innerHTML = "Which move should " + me.name + "-Morph use?"
 
   if(me.level  < 5){
-  menu.innerHTML += "<br><button id = button onclick ='flametack(other)'> Flame </button> ";
+  menu.innerHTML += "<br><button id = button onclick ='me.flametack(other)'> Flame </button> ";
   } else if(me.level  < 8){
-  menu.innerHTML += "<br><br><button id = button onclick ='flametack(other)'> Flame </button> "; 
+  menu.innerHTML += "<br><br><button id = button onclick ='me.flametack(other)'> Flame </button> "; 
   menu.innerHTML += "<br><button id = button onclick ='burnt(other)'> Burn </button> ";
   } 
 }
@@ -222,33 +287,7 @@ function switchElemorph() {
 
 function bananas() {
   var menu = document.getElementById("menu1");
-  menu.innerHTML = "Food"
-}
-
-function flametack(enemy) {
-  var menu = document.getElementById("menu2");
-  var damage = 10; // standard damage
-  switch (enemy.type) {
-    case "water":
-      damage /= 2
-      break;
-    default:
-  }
-  switch (enemy.type) {
-    case "grass":
-      damage *= 2
-      break;
-    default:
-  }
-  enemy.health -= damage;
-  menu.innerHTML = me.name + "-Morph dealt " + damage + " damage!<br>"
-
-  // refresh the screen
-  enemy.updateStatus();
-
-  if (enemy == other) {
-    other.attack(me);
-  }
+  menu.innerHTML = "Use which item?"
 }
 
 function burnt(enemy) {
@@ -256,18 +295,14 @@ function burnt(enemy) {
   var damage = 0; // standard damage
   if (Math.random() < 0.95) {
      enemy.burnt = true;
+
   }
+
   if (enemy.type == "fire") {
      enemy.burnt = false;
      menu.innerHTML = me.name + "-Morph dealt " + damage + " damage. " + me.name + "-Morph tried to burn the foe " + enemy.name + "-Morph, but could not." ;
   }
 
-  switch (enemy.type) {
-    case "water":
-      damage /= 2 
-      break;
-    default:
-  }
   enemy.health -= damage;
 
   menu.innerHTML = me.name + "-Morph dealt " + damage + " damage";
