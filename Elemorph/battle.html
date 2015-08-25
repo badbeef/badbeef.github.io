@@ -42,6 +42,9 @@
 p.sansserif {
     font-family: "Lucida Console", Courier, monospace;
 }
+h1 {
+  background-color: rgb(275,255,0);
+}
 </style>
 <script>
 "use strict";
@@ -78,11 +81,10 @@ function Elemorph(type, level) {
     if (this.health < 1) {
       this.health = 0;
       if (this == me) {
-        this.page2.innerHTML = "Your ";
+        alert("Your " + this.name + "-Morph got knocked out!");
       } else {
-        this.page2.innerHTML = "The foe ";
+        alert("The foe " + this.name + "-Morph got knocked out!");
       }
-      this.page2.innerHTML += this.name + "-Morph got knocked out!";
     }
 
     this.page.innerHTML += "Health:" + this.health + "/" + this.maxhealth + "<br>"
@@ -93,20 +95,29 @@ function Elemorph(type, level) {
 this.flametack = function(enemy) {
   var menu = document.getElementById("menu2");
   var damage = 15; // standard damage
-  switch (enemy.type) {
+
+  switch (this.type) {
+  case "fire":
+
+    switch (enemy.type) {
     case "water":
       damage = 7;
       break;
-    default:
-  }
-  switch (enemy.type) {
     case "grass":
       damage *= 2;
       break;
     default:
+    }
   }
+
   enemy.health -= damage;
-  enemy.page2.innerHTML = this.name + "-Morph dealt " + damage + " damage!<br>"
+
+  if (this == me) {
+    enemy.page2.innerHTML = "Your ";
+  } else {
+    enemy.page2.innerHTML = "The foe ";
+  }
+  enemy.page2.innerHTML += this.name + "-Morph dealt " + damage + " damage!<br>"
 
   // refresh the screen
   enemy.updateStatus();
@@ -143,7 +154,6 @@ this.flametack = function(enemy) {
     default:
     }
 
-    enemy.updateStatus();
   }
   
   this.toString = function() {
@@ -282,7 +292,7 @@ function makeMoves() {
 
 function switchElemorph() {
   var menu = document.getElementById("menu1");
-  menu.innerHTML = "Switch with what elemorph?"
+  menu.innerHTML = "Switch with what elemorph?<br>"
 }
 
 function bananas() {
